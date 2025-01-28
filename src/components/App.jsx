@@ -3,28 +3,25 @@ import { FeedbackOptions } from './Feedback/FeedbackOptions';
 import { Section } from './Section/Section';
 import { Wrapper } from './Section/SectionStyled';
 import { Notification } from './Notification/NitificationMessage';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 export const App = () => {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  const [feedback, setFeedback] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
 
   const onHandleClick = type => {
-    if (type === 'good') {
-      setGood(prevState => prevState + 1);
-    } else if (type === 'neutral') {
-      setNeutral(prevState => prevState + 1);
-    } else if (type === 'bad') {
-      setBad(prevState => prevState + 1);
-    }
+    setFeedback(prevState => ({
+      ...prevState,
+      [type]: prevState[type] + 1,
+    }));
   };
 
-  const total = useMemo(() => good + neutral + bad, [good, neutral, bad]);
-  const positivePercentage = useMemo(
-    () => (total > 0 ? Math.round((good / total) * 100) : 0),
-    [good, total]
-  );
+  const { good, neutral, bad } = feedback;
+  const total = good + neutral + bad;
+  const positivePercentage = total > 0 ? Math.round((good / total) * 100) : 0;
 
   return (
     <Wrapper>
